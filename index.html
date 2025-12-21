@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Золотой Детектор: Вакцина от мошенников</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Цветовая палитра "Буратино" */
+            --gold: #F59E0B;
+            --gold-dark: #D97706;
+            --wood: #92400E;
+            --fox-orange: #EA580C;
+            --danger-red: #DC2626;
+            --parchment: #FEF3C7;
+            --cream: #FFFBF5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--cream);
+            color: #1F2937;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .story-font {
+            font-family: 'Merriweather', serif;
+        }
+
+        /* Progress Bar - тонкий индикатор сверху */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--fox-orange) 100%);
+            z-index: 9999;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        /* Плавный скролл */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Полноэкранные секции */
+        .story-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        /* Золотой градиент */
+        .gold-gradient {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+        }
+
+        /* Деревянная текстура */
+        .wood-texture {
+            background: linear-gradient(135deg, #78350F 0%, var(--wood) 50%, #78350F 100%);
+        }
+
+        /* Анимация появления при скролле */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Карточки с тенями */
+        .story-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Пульсирующая тревога */
+        @keyframes pulse-danger {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+            50% { box-shadow: 0 0 0 20px rgba(220, 38, 38, 0); }
+        }
+
+        .pulse-danger {
+            animation: pulse-danger 2s infinite;
+        }
+
+        /* Кнопки-монеты */
+        .btn-coin {
+            background: linear-gradient(135deg, #FCD34D 0%, var(--gold) 50%, var(--gold-dark) 100%);
+            color: var(--wood);
+            font-weight: 700;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            border: 3px solid var(--gold-dark);
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.125rem;
+        }
+
+        .btn-coin:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(245, 158, 11, 0.6);
+        }
+
+        /* График контейнер */
+        .chart-box {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Карточки фактов */
+        .fact-card {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+            border-left: 5px solid var(--danger-red);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Цена ошибки */
+        .price-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .price-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /*Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--parchment);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-dark);
+        }
+
+        /* ЗАДАЧА 1: Fake Scam Call Widget - По центру экрана */
+        #fake-scam-widget {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            max-width: 500px;
+            width: 90%;
+            z-index: 9998;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        #fake-scam-widget.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        /* Кнопка закрытия */
+        .close-widget-btn {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            width: 36px;
+            height: 36px;
+            background: #DC2626;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+        }
+
+        .close-widget-btn:hover {
+            background: #991B1B;
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ЗАДАЧА 3: Count-up animation */
+        @keyframes count-up {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .count-up-active {
+            animation: count-up 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Progress Bar -->
+    <div id="progress-bar"></div>
+
+    <!-- СЕКЦИЯ 1: ПАНИКА (Проблема) -->
+    <section class="story-section" style="background: linear-gradient(135deg, #1F2937 0%, #111827 100%);">
+        <div class="max-w-6xl mx-auto text-center text-white">
+            <div class="fade-in">
+                <div class="mb-6">
+                    <i data-lucide="alert-triangle" class="w-24 h-24 text-red-500 mx-auto animate-bounce" stroke-width="2"></i>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-black mb-8 leading-tight">
+                    Прямо сейчас<br/>
+                    <span style="color: var(--gold);">кто-то теряет свои деньги</span>
+                </h1>
+                <div class="text-3xl md:text-5xl font-bold mb-12 pulse-danger inline-block px-8 py-4 rounded-2xl bg-red-600/30 border-4 border-red-500">
+                    <div class="text-lg mb-2">Жертв мошенничества в РФ:</div>
+                    <div id="victim-counter" class="tabular-nums">13 495 302</div>
+                </div>
+                <p class="text-xl md:text-2xl mb-12 max-w-3xl mx-auto opacity-90">
+                    Каждые 2.5 секунды — ещё один человек. Средний ущерб: <strong style="color: var(--gold);">47 000 ₽</strong>
+                </p>
+
+                <a href="#problem" class="btn-coin">
+                    <i class="fas fa-arrow-down"></i>
+                    Узнать, почему это происходит
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- СЕКЦИЯ 2: ПСИХОЛОГИЯ ОБМАНА -->
+    <section id="problem" class="story-section bg-gradient-to-br from-red-50 to-orange-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="fade-in text-center mb-16">
+                <h2 class="text-4xl md:text-6xl font-black mb-6">
+                    <i data-lucide="brain" class="inline-block w-12 h-12 md:w-16 md:h-16 text-red-600 mr-3"></i>
+                    Анатомия обмана
+                </h2>
+                <p class="text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto">
+                    Мошенники бьют не по логике, а по эмоциям. Вот что происходит в вашем мозге во время атаки:
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+                <!-- График: Гормоны во время атаки -->
+                <div class="fade-in chart-box">
+                    <h3 class="text-2xl font-bold mb-4 text-center flex items-center justify-center gap-2">
+                        <i data-lucide="zap" class="w-6 h-6 text-yellow-500"></i>
+                        Химия стресса
+                    </h3>
+                    <canvas id="hormonesChart" style="max-height: 300px;"></canvas>
+                    <p class="text-sm text-gray-600 text-center mt-4">
+                        Кортизол (стресс) блокирует логику. Дофамин (жадность) ослепляет.
+                    </p>
+                            </div>
+
+                <!-- График: Разрыв реальности -->
+                <div class="fade-in chart-box">
+                    <h3 class="text-2xl font-bold mb-4 text-center flex items-center justify-center gap-2">
+                        <i data-lucide="bar-chart" class="w-6 h-6 text-blue-500"></i>
+                        Теория vs Практика
+                    </h3>
+                    <canvas id="effectivenessChart" style="max-height: 300px;"></canvas>
+                    <p class="text-sm text-gray-600 text-center mt-4">
+                        Лекции не работают. Нужна симуляция реального стресса.
+                    </p>
+                        </div>
+                            </div>
+
+            <!-- Карточки с фактами -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 fade-in">
+                <div class="fact-card">
+                    <div class="text-4xl font-black text-red-600 mb-2">46,800%</div>
+                    <div class="text-sm font-bold mb-2">годовых доходности</div>
+                    <p class="text-sm text-gray-700">
+                        Математическая невозможность. Признак пирамиды. Даже Баффет зарабатывает ~20% в год.
+                    </p>
+                        </div>
+
+                <div class="fact-card">
+                    <div class="text-4xl font-black text-red-600 mb-2">93%</div>
+                    <div class="text-sm font-bold mb-2">мошенников исчезают</div>
+                    <p class="text-sm text-gray-700">
+                        Если применить "Правило 72 часов" и не принимать решение сразу (данные МВД РФ).
+                    </p>
+                </div>
+
+                <div class="fact-card">
+                    <div class="text-4xl font-black text-red-600 mb-2">55+</div>
+                    <div class="text-sm font-bold mb-2">вариантов выбора</div>
+                    <p class="text-sm text-gray-700">
+                        В нашем сценарии. Каждое решение влияет на финал — как в реальной жизни.
+                    </p>
+                    </div>
+                    </div>
+                </div>
+    </section>
+
+    <!-- СЕКЦИЯ 3: РЕШЕНИЕ (Наше приложение) -->
+    <section id="solution" class="story-section wood-texture text-white">
+        <div class="max-w-6xl mx-auto text-center">
+            <div class="fade-in">
+                <div class="mb-6">
+                    <i data-lucide="coins" class="w-24 h-24 mx-auto" style="color: var(--gold);" stroke-width="2"></i>
+            </div>
+                <h2 class="text-4xl md:text-6xl font-black mb-8">
+                    Золотой Детектор
+                </h2>
+                <p class="text-2xl md:text-3xl mb-12 max-w-4xl mx-auto leading-relaxed">
+                    Мы превратили сказку про Буратино в интерактивный <strong style="color: var(--gold);">стресс-тренажер</strong>. 
+                    Здесь вы теряете виртуальные монеты, чтобы <strong>сохранить реальные</strong>.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+                    <div class="story-card">
+                        <div class="mb-4 flex justify-center">
+                            <i data-lucide="timer" class="w-16 h-16 text-red-500"></i>
+                </div>
+                        <h3 class="text-2xl font-bold mb-3" style="color: var(--wood);">Таймер Давления</h3>
+                        <p class="text-gray-700">
+                            Реальный обратный отсчет. Мошенники не дают времени думать — и мы тоже. Учишься принимать решения в стрессе.
+                </p>
+            </div>
+
+                    <div class="story-card">
+                        <div class="mb-4 flex justify-center">
+                            <i data-lucide="flag" class="w-16 h-16 text-red-600"></i>
+                    </div>
+                        <h3 class="text-2xl font-bold mb-3" style="color: var(--wood);">Детектор Красных Флажков</h3>
+                        <p class="text-gray-700">
+                            86 интерактивных маркеров обмана в диалогах. Кликаешь — видишь объяснение, статистику, законы.
+                        </p>
+                </div>
+
+                    <div class="story-card">
+                        <div class="mb-4 flex justify-center">
+                            <i data-lucide="calculator" class="w-16 h-16 text-orange-500"></i>
+                    </div>
+                        <h3 class="text-2xl font-bold mb-3" style="color: var(--wood);">Калькулятор Потерь</h3>
+                        <p class="text-gray-700">
+                            Не абстрактные проценты, а реальные рубли. Видишь, сколько потеряешь через месяц, год. Математика против жадности.
+                        </p>
+                </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- СЕКЦИЯ 4: ДОКАЗАТЕЛЬСТВА (Цифры) -->
+    <section class="story-section bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="fade-in text-center mb-16">
+                <h2 class="text-4xl md:text-6xl font-black mb-6">
+                    <i data-lucide="target" class="inline-block w-12 h-12 md:w-16 md:h-16 text-orange-500 mr-3"></i>
+                    Что внутри?
+                </h2>
+                <p class="text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto">
+                    Это не просто игра. Это полноценная система обучения с глубиной контента.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+                <!-- Статистика контента -->
+                <div class="story-card text-center fade-in hover:scale-105 transition-transform">
+                    <div class="text-5xl font-black mb-2" style="color: var(--gold);">8</div>
+                    <div class="text-lg font-bold text-gray-700">Глав-уроков</div>
+                    <p class="text-sm text-gray-600 mt-2">От импульсивности до контрактов</p>
+                </div>
+
+                <div class="story-card text-center fade-in hover:scale-105 transition-transform">
+                    <div class="text-5xl font-black mb-2" style="color: var(--gold);">27</div>
+                    <div class="text-lg font-bold text-gray-700">Диалогов</div>
+                    <p class="text-sm text-gray-600 mt-2">С мошенниками и учителями</p>
+                        </div>
+
+                <div class="story-card text-center fade-in hover:scale-105 transition-transform">
+                    <div class="text-5xl font-black mb-2" style="color: var(--gold);">55+</div>
+                    <div class="text-lg font-bold text-gray-700">Выборов</div>
+                    <p class="text-sm text-gray-600 mt-2">Каждый влияет на результат</p>
+                        </div>
+
+                <div class="story-card text-center fade-in hover:scale-105 transition-transform">
+                    <div class="text-5xl font-black mb-2" style="color: var(--gold);">86</div>
+                    <div class="text-lg font-bold text-gray-700">Красных флажков</div>
+                    <p class="text-sm text-gray-600 mt-2">Интерактивных маркеров обмана</p>
+                    </div>
+                </div>
+
+            <!-- Ключевые техники -->
+            <div class="fade-in">
+                <h3 class="text-3xl font-bold text-center mb-8 flex items-center justify-center gap-3">
+                    <i data-lucide="shield" class="w-8 h-8 text-blue-600"></i>
+                    6 техник защиты, которые вы освоите:
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="story-card border-l-4" style="border-color: var(--gold);">
+                        <h4 class="font-bold text-xl mb-2">1. Золотой Детектор</h4>
+                        <p class="text-gray-700">4 контрольных вопроса, защищающие от 95% мошенников</p>
+                        </div>
+
+                    <div class="story-card border-l-4" style="border-color: var(--gold);">
+                        <h4 class="font-bold text-xl mb-2">2. Правило 72 часов</h4>
+                        <p class="text-gray-700">Никогда не принимай финансовых решений сразу</p>
+                        </div>
+
+                    <div class="story-card border-l-4" style="border-color: var(--gold);">
+                        <h4 class="font-bold text-xl mb-2">3. Телесный Барометр</h4>
+                        <p class="text-gray-700">Слушай сигналы тела — оно предупреждает раньше мозга</p>
+                    </div>
+
+                    <div class="story-card border-l-4" style="border-color: var(--gold);">
+                        <h4 class="font-bold text-xl mb-2">4. Три Корзины</h4>
+                        <p class="text-gray-700">Правильное распределение денег: безопасность, рост, радость</p>
+                        </div>
+
+                    <div class="story-card border-l-4" style="border-color: var(--gold);">
+                        <h4 class="font-bold text-xl mb-2">5. Микроскоп договоров</h4>
+                        <p class="text-gray-700">Чтение мелкого шрифта и опасных фраз</p>
+                </div>
+
+                    <div class="story-card border-l-4" style="border-color: var(--gold);">
+                        <h4 class="font-bold text-xl mb-2">6. Калькулятор реальности</h4>
+                        <p class="text-gray-700">Мгновенный расчет доходности и выявление пирамид</p>
+                        </div>
+                        </div>
+                    </div>
+        </div>
+    </section>
+
+    <!-- СЕКЦИЯ 5: ЦЕНА ОШИБКИ -->
+    <section class="story-section" style="background: linear-gradient(135deg, #7C2D12 0%, var(--wood) 100%);">
+        <div class="max-w-6xl mx-auto text-white">
+            <div class="fade-in text-center mb-16">
+                <h2 class="text-4xl md:text-6xl font-black mb-8">
+                    <i data-lucide="banknote" class="inline-block w-12 h-12 md:w-16 md:h-16 mr-3" style="color: var(--gold);"></i>
+                    Цена ошибки
+                </h2>
+                <p class="text-xl md:text-2xl max-w-3xl mx-auto mb-12 opacity-90">
+                    Что дешевле: купить вакцину или лечить болезнь?
+                    </p>
+                </div>
+
+            <div class="price-comparison fade-in">
+                <!-- Приложение -->
+                <div class="story-card text-center">
+                    <div class="mb-4 flex justify-center">
+                        <i data-lucide="check-circle" class="w-16 h-16 text-green-600"></i>
+                        </div>
+                    <h3 class="text-3xl font-bold mb-4" style="color: var(--gold);">Золотой Детектор</h3>
+                    <div class="text-6xl font-black mb-4" style="color: var(--gold);">990 ₽</div>
+                    <p class="text-gray-700 text-lg mb-6">Цена чашки кофе в неделю</p>
+                    <ul class="text-left text-gray-700 space-y-3 mb-6">
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-check text-green-600 mt-1"></i>
+                            <span>8 глав интерактивного обучения</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-check text-green-600 mt-1"></i>
+                            <span>55+ реальных сценариев обмана</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-check text-green-600 mt-1"></i>
+                            <span>6 проверенных техник защиты</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-check text-green-600 mt-1"></i>
+                            <span>Навык на всю жизнь</span>
+                        </li>
+                    </ul>
+                        </div>
+
+                <!-- Средняя потеря -->
+                <div class="story-card text-center border-4 border-red-500">
+                    <div class="mb-4 flex justify-center">
+                        <i data-lucide="x-circle" class="w-16 h-16 text-red-600"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-4 text-red-600">Средняя потеря</h3>
+                    <div class="text-6xl font-black mb-4 text-red-600">47 000 ₽</div>
+                    <p class="text-gray-700 text-lg mb-6">По данным ЦБ РФ (2024)</p>
+                    <ul class="text-left text-gray-700 space-y-3 mb-6">
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-times text-red-600 mt-1"></i>
+                            <span>Деньги потеряны навсегда</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-times text-red-600 mt-1"></i>
+                            <span>Стресс и депрессия</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-times text-red-600 mt-1"></i>
+                            <span>Потеря доверия к людям</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-times text-red-600 mt-1"></i>
+                            <span>Урок выучен слишком дорого</span>
+                        </li>
+                    </ul>
+                </div>
+                </div>
+
+            <div class="text-center mt-12 fade-in">
+                <p class="text-2xl font-bold mb-2">Разница:</p>
+                <div class="text-6xl font-black mb-8" style="color: var(--gold);">47x</div>
+                <p class="text-xl opacity-90 max-w-2xl mx-auto">
+                    Одна ошибка стоит в <strong>47 раз дороже</strong>, чем обучение. 
+                    А сколько ошибок делает человек за жизнь?
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ЗАДАЧА 3: СЧЁТЧИК СПАСЕННЫХ ДЕНЕГ -->
+    <section class="story-section bg-gradient-to-br from-green-50 to-emerald-50">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="fade-in">
+                <i data-lucide="shield-check" class="inline-block w-16 h-16 text-green-600 mb-6"></i>
+                <h2 class="text-4xl md:text-6xl font-black mb-8 text-gray-900">
+                    Наши игроки уже сохранили:
+                </h2>
+                
+                <div class="bg-white/60 backdrop-blur-lg rounded-3xl p-12 shadow-2xl border-4 border-green-400">
+                    <div id="saved-money-counter" class="text-6xl md:text-8xl font-black mb-4" style="color: var(--gold);">
+                        0 ₽
+                </div>
+                    <p class="text-xl text-gray-700 font-semibold">
+                        <i data-lucide="users" class="inline-block w-5 h-5 mr-2"></i>
+                        Защищено от мошенников благодаря обучению
+                    </p>
+                </div>
+
+                <p class="text-lg text-gray-600 mt-8 max-w-2xl mx-auto">
+                    Каждый игрок, прошедший обучение, в среднем избегает потерь в <strong class="text-green-700">47 000 ₽</strong>. 
+                    Это реальные деньги, которые остались в семьях.
+                </p>
+                </div>
+                </div>
+    </section>
+
+    <!-- СЕКЦИЯ 6: СОЦИАЛЬНОЕ ДОКАЗАТЕЛЬСТВО -->
+    <section class="story-section bg-white">
+        <div class="max-w-6xl mx-auto">
+            <div class="fade-in text-center mb-16">
+                <h2 class="text-4xl md:text-6xl font-black mb-6">
+                    <i data-lucide="graduation-cap" class="inline-block w-12 h-12 mr-4"></i>
+                    Кому это нужно?
+                </h2>
+                    </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="story-card fade-in text-center">
+                    <div class="mb-4 flex justify-center">
+                        <i data-lucide="users" class="w-16 h-16 text-blue-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4" style="color: var(--wood);">Семьям</h3>
+                    <p class="text-gray-700 mb-4">
+                        Защитите родителей от телефонных мошенников. Научите детей критическому мышлению.
+                    </p>
+                    <div class="text-3xl font-bold" style="color: var(--gold);">45%</div>
+                    <div class="text-sm text-gray-600">нашей аудитории</div>
+                    </div>
+
+                <div class="story-card fade-in text-center">
+                    <div class="mb-4 flex justify-center">
+                        <i data-lucide="building-2" class="w-16 h-16 text-green-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4" style="color: var(--wood);">Банкам</h3>
+                    <p class="text-gray-700 mb-4">
+                        Снизьте потери от фрода. Обучите клиентов безопасности. Корпоративная лицензия.
+                    </p>
+                    <div class="text-3xl font-bold" style="color: var(--gold);">35%</div>
+                    <div class="text-sm text-gray-600">B2B потенциал</div>
+                    </div>
+
+                <div class="story-card fade-in text-center">
+                    <div class="mb-4 flex justify-center">
+                        <i data-lucide="graduation-cap" class="w-16 h-16 text-purple-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4" style="color: var(--wood);">Школам и ВУЗам</h3>
+                    <p class="text-gray-700 mb-4">
+                        Финансовая грамотность в игровом формате. Готовая программа для уроков ОБЖ.
+                    </p>
+                    <div class="text-3xl font-bold" style="color: var(--gold);">20%</div>
+                    <div class="text-sm text-gray-600">образовательный сегмент</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- СЕКЦИЯ 7: ПРИЗЫВ К ДЕЙСТВИЮ -->
+    <section class="story-section gold-gradient text-white">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="fade-in">
+                <div class="mb-6 flex justify-center">
+                    <i data-lucide="coins" class="w-28 h-28" stroke-width="2"></i>
+                </div>
+                <h2 class="text-5xl md:text-7xl font-black mb-8">
+                    Спасите свои<br/>5 золотых монет
+                </h2>
+                <p class="text-2xl md:text-3xl mb-12 opacity-90 leading-relaxed">
+                    Пока вы читали эту страницу, <strong class="text-red-200" id="victims-during-read">47</strong> человек 
+                    стали жертвами мошенников. Не будьте следующим.
+                </p>
+
+                <!-- Три кнопки CTA -->
+                <div class="flex flex-col md:flex-row gap-6 justify-center mb-12">
+                    <a href="#demo" class="btn-coin text-2xl">
+                        <i class="fas fa-gamepad"></i>
+                        Сыграть в демо
+                    </a>
+
+                    <a href="#buy" class="btn-coin text-2xl" style="background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); border-color: #7F1D1D;">
+                        <i class="fas fa-shield-alt"></i>
+                        Купить за 990 ₽
+                    </a>
+
+                    <a href="#invest" class="btn-coin text-2xl" style="background: white; color: var(--wood); border-color: var(--wood);">
+                        <i class="fas fa-rocket"></i>
+                        Инвестировать
+                    </a>
+                            </div>
+
+                <!-- ЗАДАЧА 4: QR-код для мобильных -->
+                <div class="bg-white/20 backdrop-blur-lg rounded-2xl p-8 max-w-md mx-auto mb-12">
+                    <div class="flex items-center gap-6">
+                        <div class="flex-shrink-0">
+                            <img 
+                                src="url_qrcodecreator.com_15_55_13.svg" 
+                                alt="QR код игры" 
+                                class="w-32 h-32 bg-white p-2 rounded-xl shadow-lg"
+                            />
+                        </div>
+                        <div class="text-left">
+                            <i data-lucide="smartphone" class="inline-block w-8 h-8 mb-3"></i>
+                            <h3 class="text-xl font-bold mb-2">Играй на смартфоне</h3>
+                            <p class="text-sm opacity-90">Сканируй QR-код, чтобы открыть игру на телефоне</p>
+                            </div>
+                        </div>
+                            </div>
+
+                <!-- Гарантии -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+                    <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6">
+                        <div class="mb-3 flex justify-center">
+                            <i data-lucide="lock" class="w-12 h-12"></i>
+                        </div>
+                        <div class="font-bold text-lg mb-2">100% возврат</div>
+                        <p class="text-sm opacity-80">14 дней на тестирование</p>
+                            </div>
+
+                    <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6">
+                        <div class="mb-3 flex justify-center">
+                            <i data-lucide="smartphone" class="w-12 h-12"></i>
+                        </div>
+                        <div class="font-bold text-lg mb-2">Все устройства</div>
+                        <p class="text-sm opacity-80">Играй где удобно</p>
+                    </div>
+
+                    <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6">
+                        <div class="mb-3 flex justify-center">
+                            <i data-lucide="award" class="w-12 h-12"></i>
+                        </div>
+                        <div class="font-bold text-lg mb-2">Сертификат</div>
+                        <p class="text-sm opacity-80">После прохождения</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- СЕКЦИЯ 8: КОНТАКТЫ (МИНИМАЛИСТИЧНАЯ) -->
+    <section class="story-section bg-gradient-to-br from-gray-900 to-gray-800 text-white" style="min-height: 60vh;">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="fade-in">
+                <h2 class="text-4xl font-bold mb-8">Свяжитесь с нами</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                    <div>
+                        <div class="mb-3 flex justify-center">
+                            <i data-lucide="mail" class="w-10 h-10 text-yellow-400"></i>
+                        </div>
+                        <a href="mailto:medyanikov@list.ru" class="text-xl hover:text-yellow-400 transition">
+                            medyanikov@list.ru
+                        </a>
+                    </div>
+                    <div>
+                        <div class="mb-3 flex justify-center">
+                            <i data-lucide="message-circle" class="w-10 h-10 text-yellow-400"></i>
+                        </div>
+                        <a href="https://t.me/your_contact" class="text-xl hover:text-yellow-400 transition">
+                            Telegram
+                        </a>
+                    </div>
+                    <div>
+                        <div class="mb-3 flex justify-center">
+                            <i data-lucide="qr-code" class="w-10 h-10 text-yellow-400"></i>
+                        </div>
+                        <div class="text-xl">QR-код для демо</div>
+                    </div>
+                </div>
+                <p class="text-sm opacity-60">© 2025 Золотой Детектор. Все права защищены.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ЗАДАЧА 1: Fake Scam Call Widget -->
+    <div id="fake-scam-widget" class="glass-effect rounded-2xl p-6">
+        <!-- Кнопка закрытия (крестик) -->
+        <button 
+            id="close-widget-btn" 
+            class="close-widget-btn hidden"
+            onclick="closeScamWidget()"
+            title="Закрыть"
+        >
+            <i data-lucide="x" class="w-5 h-5 text-white"></i>
+        </button>
+
+        <div class="flex items-start gap-4 mb-4">
+            <div class="flex-shrink-0 w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center animate-pulse">
+                <i data-lucide="phone-call" class="w-7 h-7 text-white"></i>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-bold text-lg text-gray-900 mb-1">Служба Безопасности Банка</h3>
+                <p class="text-sm text-gray-600" id="scam-widget-text">
+                    Замечена подозрительная операция на 50 000 ₽. Для отмены срочно подтвердите данные!
+                </p>
+            </div>
+        </div>
+
+        <div id="scam-widget-buttons" class="flex gap-3">
+            <button 
+                onclick="handleScamAnswer('accept')"
+                class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2"
+            >
+                <i data-lucide="phone" class="w-4 h-4"></i>
+                Ответить
+            </button>
+            <button 
+                onclick="handleScamAnswer('reject')"
+                class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2"
+            >
+                <i data-lucide="phone-off" class="w-4 h-4"></i>
+                Сбросить
+            </button>
+        </div>
+
+        <div id="scam-widget-result" class="mt-4 p-4 rounded-xl hidden"></div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ========== PROGRESS BAR ==========
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrolled = window.scrollY;
+            const progress = (scrolled / documentHeight) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        });
+
+        // ========== FADE IN ON SCROLL ==========
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ========== VICTIM COUNTER (Animated) ==========
+        let victimCount = 13495302;
+        setInterval(() => {
+            victimCount++;
+            document.getElementById('victim-counter').textContent = victimCount.toLocaleString('ru-RU');
+        }, 2500);
+
+        // ========== VICTIMS DURING READ ==========
+        let victimsDuringRead = 0;
+        setInterval(() => {
+            victimsDuringRead++;
+            const el = document.getElementById('victims-during-read');
+            if (el) el.textContent = victimsDuringRead;
+        }, 2000);
+
+        // ========== CHARTS ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // CHART 1: Гормоны во время атаки мошенника
+            const hormonesCtx = document.getElementById('hormonesChart').getContext('2d');
+            new Chart(hormonesCtx, {
+                type: 'line',
+                data: {
+                    labels: ['0 сек', '10 сек', '30 сек', '1 мин', '2 мин', '5 мин'],
+                    datasets: [
+                        {
+                            label: 'Кортизол (стресс)',
+                            data: [20, 45, 85, 95, 100, 90],
+                            borderColor: '#DC2626',
+                            backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Дофамин (жадность)',
+                            data: [30, 50, 70, 90, 95, 85],
+                            borderColor: '#F59E0B',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Логика',
+                            data: [80, 50, 30, 15, 10, 5],
+                            borderColor: '#10B981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: {
+                            display: true,
+                            text: 'Что происходит в мозге во время атаки',
+                            font: { size: 14, weight: 'bold' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { callback: (value) => value + '%' }
+                        }
+                    }
+                }
+            });
+
+            // CHART 2: Эффективность обучения
+            const effectivenessCtx = document.getElementById('effectivenessChart').getContext('2d');
+            new Chart(effectivenessCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Лекции', 'Книги', 'Видео', 'Симуляция', 'Золотой Детектор'],
+                    datasets: [{
+                        label: 'Эффективность (%)',
+                        data: [15, 20, 35, 70, 85],
+                        backgroundColor: [
+                            'rgba(156, 163, 175, 0.7)',
+                            'rgba(156, 163, 175, 0.7)',
+                            'rgba(251, 191, 36, 0.7)',
+                            'rgba(34, 197, 94, 0.7)',
+                            'rgba(245, 158, 11, 0.9)'
+                        ],
+                        borderColor: [
+                            '#9CA3AF',
+                            '#9CA3AF',
+                            '#F59E0B',
+                            '#22C55E',
+                            '#D97706'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Запоминание информации через 3 месяца',
+                            font: { size: 14, weight: 'bold' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { callback: (value) => value + '%' }
+                        }
+                    }
+                }
+            });
+        });
+
+        // ========== ЗАДАЧА 1: FAKE SCAM CALL WIDGET ==========
+        let scamWidgetShown = false;
+
+        setTimeout(() => {
+            const widget = document.getElementById('fake-scam-widget');
+            widget.classList.add('active');
+            scamWidgetShown = true;
+        }, 30000); // Показываем через 30 секунд
+
+        function handleScamAnswer(action) {
+            const widget = document.getElementById('fake-scam-widget');
+            const result = document.getElementById('scam-widget-result');
+            const buttons = document.getElementById('scam-widget-buttons');
+            const text = document.getElementById('scam-widget-text');
+            const closeBtn = document.getElementById('close-widget-btn');
+
+            buttons.style.display = 'none';
+            result.classList.remove('hidden');
+            
+            // Показываем кнопку закрытия после ответа
+            closeBtn.classList.remove('hidden');
+
+            if (action === 'accept') {
+                // Неправильный ответ
+                widget.style.background = 'linear-gradient(135deg, rgba(220, 38, 38, 0.95) 0%, rgba(153, 27, 27, 0.95) 100%)';
+                widget.style.color = 'white';
+                text.style.color = 'white';
+                result.style.background = 'rgba(255, 255, 255, 0.2)';
+                result.innerHTML = `
+                    <div class="text-center">
+                        <div class="text-5xl mb-3">❌</div>
+                        <h4 class="font-bold text-xl mb-2">Вы потеряли деньги!</h4>
+                        <p class="text-sm mb-4">Банк НИКОГДА не звонит первым и не просит данные по телефону.</p>
+                        <button onclick="window.location.href='#solution'" class="bg-white text-red-600 font-bold py-2 px-6 rounded-lg hover:scale-105 transition">
+                            Научиться защищаться
+                        </button>
+                    </div>
+                `;
+            } else {
+                // Правильный ответ
+                widget.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%)';
+                widget.style.color = 'white';
+                text.style.color = 'white';
+                result.style.background = 'rgba(255, 255, 255, 0.2)';
+                result.innerHTML = `
+                    <div class="text-center">
+                        <div class="text-5xl mb-3">✅</div>
+                        <h4 class="font-bold text-xl mb-2">Верно! Вы сохранили капитал!</h4>
+                        <p class="text-sm mb-4">Банк никогда не звонит сам. Это был мошенник!</p>
+                        <button onclick="window.location.href='#solution'" class="bg-white text-green-600 font-bold py-2 px-6 rounded-lg hover:scale-105 transition">
+                            Начать обучение
+                        </button>
+                    </div>
+                `;
+            }
+
+            // Инициализируем иконки после добавления контента
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        function closeScamWidget() {
+            const widget = document.getElementById('fake-scam-widget');
+            widget.classList.remove('active');
+        }
+
+        // ========== ЗАДАЧА 3: COUNT-UP ANIMATION ДЛЯ СЧЁТЧИКА ==========
+        let countUpTriggered = false;
+
+        function animateCountUp(element, target, duration = 2000) {
+            let start = 0;
+            const increment = target / (duration / 16);
+            const counter = setInterval(() => {
+                start += increment;
+                if (start >= target) {
+                    element.textContent = target.toLocaleString('ru-RU') + ' ₽';
+                    clearInterval(counter);
+                } else {
+                    element.textContent = Math.floor(start).toLocaleString('ru-RU') + ' ₽';
+                }
+            }, 16);
+        }
+
+        // Observer для счётчика спасенных денег
+        const savedMoneyObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !countUpTriggered) {
+                    countUpTriggered = true;
+                    const counter = document.getElementById('saved-money-counter');
+                    // Предположим, что обучили 309 человек (309 * 47000 = 14,523,000)
+                    animateCountUp(counter, 14523000, 2500);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const savedMoneyElement = document.getElementById('saved-money-counter');
+        if (savedMoneyElement) {
+            savedMoneyObserver.observe(savedMoneyElement);
+        }
+
+        // ========== ИНИЦИАЛИЗАЦИЯ LUCIDE ICONS ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            // Инициализируем все иконки Lucide
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+
+        // После загрузки страницы и Chart.js
+        window.addEventListener('load', () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+
+</body>
+</html>
