@@ -312,8 +312,8 @@
                     <p class="text-sm text-gray-600 text-center mt-4">
                         Лекции не работают. Нужна симуляция реального стресса.
                     </p>
-                        </div>
                             </div>
+                        </div>
 
             <!-- Карточки с фактами -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 fade-in">
@@ -323,7 +323,7 @@
                     <p class="text-sm text-gray-700">
                         Математическая невозможность. Признак пирамиды. Даже Баффет зарабатывает ~20% в год.
                     </p>
-                        </div>
+                            </div>
 
                 <div class="fact-card">
                     <div class="text-4xl font-black text-red-600 mb-2">93%</div>
@@ -444,17 +444,17 @@
                     <div class="story-card border-l-4" style="border-color: var(--gold);">
                         <h4 class="font-bold text-xl mb-2">1. Золотой Детектор</h4>
                         <p class="text-gray-700">4 контрольных вопроса, защищающие от 95% мошенников</p>
-                        </div>
+                    </div>
 
                     <div class="story-card border-l-4" style="border-color: var(--gold);">
                         <h4 class="font-bold text-xl mb-2">2. Правило 72 часов</h4>
                         <p class="text-gray-700">Никогда не принимай финансовых решений сразу</p>
-                        </div>
+                </div>
 
                     <div class="story-card border-l-4" style="border-color: var(--gold);">
                         <h4 class="font-bold text-xl mb-2">3. Телесный Барометр</h4>
                         <p class="text-gray-700">Слушай сигналы тела — оно предупреждает раньше мозга</p>
-                    </div>
+                        </div>
 
                     <div class="story-card border-l-4" style="border-color: var(--gold);">
                         <h4 class="font-bold text-xl mb-2">4. Три Корзины</h4>
@@ -464,14 +464,14 @@
                     <div class="story-card border-l-4" style="border-color: var(--gold);">
                         <h4 class="font-bold text-xl mb-2">5. Микроскоп договоров</h4>
                         <p class="text-gray-700">Чтение мелкого шрифта и опасных фраз</p>
-                </div>
+                    </div>
 
                     <div class="story-card border-l-4" style="border-color: var(--gold);">
                         <h4 class="font-bold text-xl mb-2">6. Калькулятор реальности</h4>
                         <p class="text-gray-700">Мгновенный расчет доходности и выявление пирамид</p>
                         </div>
-                        </div>
                     </div>
+                </div>
         </div>
     </section>
 
@@ -486,7 +486,7 @@
                 <p class="text-xl md:text-2xl max-w-3xl mx-auto mb-12 opacity-90">
                     Что дешевле: купить вакцину или лечить болезнь?
                     </p>
-                </div>
+                        </div>
 
             <div class="price-comparison fade-in">
                 <!-- Приложение -->
@@ -495,7 +495,11 @@
                         <i data-lucide="check-circle" class="w-16 h-16 text-green-600"></i>
                         </div>
                     <h3 class="text-3xl font-bold mb-4" style="color: var(--gold);">Золотой Детектор</h3>
-                    <div class="text-6xl font-black mb-4" style="color: var(--gold);">990 ₽</div>
+                    <div class="mb-4">
+                        <div class="text-3xl font-bold mb-2 text-gray-400 line-through">990 ₽</div>
+                        <div class="text-7xl font-black text-green-600 mb-2">99 ₽</div>
+                        <p class="text-lg font-bold text-green-700 bg-green-100 inline-block px-4 py-1 rounded-full">Сегодня</p>
+                    </div>
                     <p class="text-gray-700 text-lg mb-6">Цена чашки кофе в неделю</p>
                     <ul class="text-left text-gray-700 space-y-3 mb-6">
                         <li class="flex items-start gap-2">
@@ -515,13 +519,13 @@
                             <span>Навык на всю жизнь</span>
                         </li>
                     </ul>
-                        </div>
+                </div>
 
                 <!-- Средняя потеря -->
                 <div class="story-card text-center border-4 border-red-500">
                     <div class="mb-4 flex justify-center">
                         <i data-lucide="x-circle" class="w-16 h-16 text-red-600"></i>
-                    </div>
+                        </div>
                     <h3 class="text-3xl font-bold mb-4 text-red-600">Средняя потеря</h3>
                     <div class="text-6xl font-black mb-4 text-red-600">47 000 ₽</div>
                     <p class="text-gray-700 text-lg mb-6">По данным ЦБ РФ (2024)</p>
@@ -543,8 +547,8 @@
                             <span>Урок выучен слишком дорого</span>
                         </li>
                     </ul>
-                </div>
-                </div>
+                        </div>
+                    </div>
 
             <div class="text-center mt-12 fade-in">
                 <p class="text-2xl font-bold mb-2">Разница:</p>
@@ -649,23 +653,13 @@
                     стали жертвами мошенников. Не будьте следующим.
                 </p>
 
-                <!-- Три кнопки CTA -->
-                <div class="flex flex-col md:flex-row gap-6 justify-center mb-12">
-                    <a href="#demo" class="btn-coin text-2xl">
+                <!-- Кнопка CTA -->
+                <div class="flex justify-center mb-12">
+                    <a href="https://gold-detector.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-coin text-2xl">
                         <i class="fas fa-gamepad"></i>
                         Сыграть в демо
                     </a>
-
-                    <a href="#buy" class="btn-coin text-2xl" style="background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); border-color: #7F1D1D;">
-                        <i class="fas fa-shield-alt"></i>
-                        Купить за 990 ₽
-                    </a>
-
-                    <a href="#invest" class="btn-coin text-2xl" style="background: white; color: var(--wood); border-color: var(--wood);">
-                        <i class="fas fa-rocket"></i>
-                        Инвестировать
-                    </a>
-                            </div>
+                </div>
 
                 <!-- ЗАДАЧА 4: QR-код для мобильных -->
                 <div class="bg-white/20 backdrop-blur-lg rounded-2xl p-8 max-w-md mx-auto mb-12">
@@ -680,7 +674,11 @@
                         <div class="text-left">
                             <i data-lucide="smartphone" class="inline-block w-8 h-8 mb-3"></i>
                             <h3 class="text-xl font-bold mb-2">Играй на смартфоне</h3>
-                            <p class="text-sm opacity-90">Сканируй QR-код, чтобы открыть игру на телефоне</p>
+                            <p class="text-sm opacity-90 mb-4">Сканируй QR-код, чтобы открыть игру на телефоне</p>
+                            <p class="text-sm opacity-80 italic">
+                                <i data-lucide="heart" class="inline-block w-4 h-4 text-red-400 mr-1"></i>
+                                Мы будем признательны, если вы поддержите наш проект
+                            </p>
                             </div>
                         </div>
                             </div>
@@ -701,7 +699,7 @@
                         </div>
                         <div class="font-bold text-lg mb-2">Все устройства</div>
                         <p class="text-sm opacity-80">Играй где удобно</p>
-                    </div>
+                            </div>
 
                     <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6">
                         <div class="mb-3 flex justify-center">
@@ -721,29 +719,29 @@
             <div class="fade-in">
                 <h2 class="text-4xl font-bold mb-8">Свяжитесь с нами</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                    <div>
+                <div>
                         <div class="mb-3 flex justify-center">
                             <i data-lucide="mail" class="w-10 h-10 text-yellow-400"></i>
-                        </div>
+                            </div>
                         <a href="mailto:medyanikov@list.ru" class="text-xl hover:text-yellow-400 transition">
                             medyanikov@list.ru
                         </a>
-                    </div>
-                    <div>
+                </div>
+                <div>
                         <div class="mb-3 flex justify-center">
                             <i data-lucide="message-circle" class="w-10 h-10 text-yellow-400"></i>
-                        </div>
+                            </div>
                         <a href="https://t.me/your_contact" class="text-xl hover:text-yellow-400 transition">
                             Telegram
                         </a>
-                    </div>
-                    <div>
+                </div>
+                <div>
                         <div class="mb-3 flex justify-center">
                             <i data-lucide="qr-code" class="w-10 h-10 text-yellow-400"></i>
-                        </div>
-                        <div class="text-xl">QR-код для демо</div>
                     </div>
+                        <div class="text-xl">QR-код для демо</div>
                 </div>
+            </div>
                 <p class="text-sm opacity-60">© 2025 Золотой Детектор. Все права защищены.</p>
             </div>
         </div>
@@ -770,8 +768,8 @@
                 <p class="text-sm text-gray-600" id="scam-widget-text">
                     Замечена подозрительная операция на 50 000 ₽. Для отмены срочно подтвердите данные!
                 </p>
-            </div>
-        </div>
+                </div>
+                </div>
 
         <div id="scam-widget-buttons" class="flex gap-3">
             <button 
@@ -788,10 +786,10 @@
                 <i data-lucide="phone-off" class="w-4 h-4"></i>
                 Сбросить
             </button>
-        </div>
-
+            </div>
+            
         <div id="scam-widget-result" class="mt-4 p-4 rounded-xl hidden"></div>
-    </div>
+            </div>
 
     <!-- JavaScript -->
     <script>
