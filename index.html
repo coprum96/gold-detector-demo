@@ -17,6 +17,9 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
+    <!-- QRCode.js для генерации QR-кодов -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -275,7 +278,7 @@
                 <div class="text-3xl md:text-5xl font-bold mb-12 pulse-danger inline-block px-8 py-4 rounded-2xl bg-red-600/30 border-4 border-red-500">
                     <div class="text-lg mb-2">Жертв мошенничества в РФ:</div>
                     <div id="victim-counter" class="tabular-nums">13 495 302</div>
-                </div>
+            </div>
                 <p class="text-xl md:text-2xl mb-12 max-w-3xl mx-auto opacity-90">
                     Каждые 2.5 секунды — ещё один человек. Средний ущерб: <strong style="color: var(--gold);">47 000 ₽</strong>
                 </p>
@@ -284,7 +287,7 @@
                     <i class="fas fa-arrow-down"></i>
                     Узнать, почему это происходит
                 </a>
-            </div>
+        </div>
         </div>
     </section>
 
@@ -431,7 +434,7 @@
                     <div class="text-5xl font-black mb-2" style="color: var(--gold);">27</div>
                     <div class="text-lg font-bold text-gray-700">Диалогов</div>
                     <p class="text-sm text-gray-600 mt-2">С мошенниками</p>
-                </div>
+                        </div>
 
                 <div class="story-card text-center fade-in hover:scale-105 transition-transform">
                     <div class="text-5xl font-black mb-2" style="color: var(--gold);">55+</div>
@@ -671,28 +674,29 @@
                         <i class="fas fa-gamepad"></i>
                         Сыграть в демо
                     </a>
-                </div>
+                        </div>
 
-                <!-- ЗАДАЧА 4: QR-код для мобильных -->
+                <!-- ЗАДАЧА 4: QR-код для мобильных (СБП) -->
                 <div class="bg-white/20 backdrop-blur-lg rounded-2xl p-8 max-w-md mx-auto mb-12">
                     <div class="flex items-center gap-6">
                         <div class="flex-shrink-0">
-                            <img 
-                                src="url_qrcodecreator.com_15_55_13.svg" 
-                                alt="QR код игры" 
-                                class="w-32 h-32 bg-white p-2 rounded-xl shadow-lg"
-                            />
+                            <!-- Динамический QR-код СБП -->
+                            <div 
+                                id="qrcode" 
+                                class="bg-white p-2 rounded-xl shadow-lg"
+                                style="width: 128px; height: 128px;"
+                            ></div>
                         </div>
                         <div class="text-left">
                             <i data-lucide="smartphone" class="inline-block w-8 h-8 mb-3"></i>
-                            <h3 class="text-xl font-bold mb-2">Играй на смартфоне</h3>
+                            <h3 class="text-xl font-bold mb-2">Поддержите проект</h3>
                             <p class="text-sm opacity-80 italic">
                                 <i data-lucide="heart" class="inline-block w-4 h-4 text-red-400 mr-1"></i>
-                                Мы будем признательны, если вы поддержите наш проект
+                                Отсканируйте QR-код для оплаты через СБП
                             </p>
                         </div>
-                        </div>
-                            </div>
+                    </div>
+                </div>
 
                 <!-- Гарантии -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16 max-w-2xl mx-auto">
@@ -707,12 +711,12 @@
                     <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6">
                         <div class="mb-3 flex justify-center">
                             <i data-lucide="award" class="w-12 h-12"></i>
-                        </div>
+                            </div>
                         <div class="font-bold text-lg mb-2">Сертификат</div>
                         <p class="text-sm opacity-80">После прохождения</p>
-                    </div>
-                </div>
-            </div>
+                        </div>
+                            </div>
+                        </div>
         </div>
     </section>
 
@@ -722,22 +726,22 @@
             <div class="fade-in">
                 <h2 class="text-4xl font-bold mb-8">Свяжитесь с нами</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                <div>
+                            <div>
                         <div class="mb-3 flex justify-center">
                             <i data-lucide="mail" class="w-10 h-10 text-yellow-400"></i>
                             </div>
                         <a href="mailto:medyanikov@list.ru" class="text-xl hover:text-yellow-400 transition">
                             medyanikov@list.ru
                         </a>
-                </div>
-                <div>
+                        </div>
+                            <div>
                         <div class="mb-3 flex justify-center">
                             <i data-lucide="message-circle" class="w-10 h-10 text-yellow-400"></i>
                             </div>
                         <a href="https://t.me/your_contact" class="text-xl hover:text-yellow-400 transition">
                             Telegram
                         </a>
-                </div>
+                        </div>
                 <div>
                         <div class="mb-3 flex justify-center">
                             <i data-lucide="qr-code" class="w-10 h-10 text-yellow-400"></i>
@@ -1046,6 +1050,22 @@
         if (savedMoneyElement) {
             savedMoneyObserver.observe(savedMoneyElement);
         }
+
+        // ========== ГЕНЕРАЦИЯ QR-КОДА СБП ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            // Генерируем QR-код для оплаты через СБП
+            const qrcodeContainer = document.getElementById('qrcode');
+            if (qrcodeContainer && typeof QRCode !== 'undefined') {
+                new QRCode(qrcodeContainer, {
+                    text: 'https://qr.nspk.ru/BS1A007EUNTS0QNH9Q38KVKJ9C39GJ53?type=01&bank=100000000111&crc=958F',
+                    width: 128,
+                    height: 128,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            }
+        });
 
         // ========== ИНИЦИАЛИЗАЦИЯ LUCIDE ICONS ==========
         document.addEventListener('DOMContentLoaded', () => {
